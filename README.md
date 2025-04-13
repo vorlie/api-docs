@@ -36,8 +36,8 @@ public/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/vorlie-docs.git
-   cd vorlie-docs
+   git clone https://github.com/vorlie/api-docs.git
+   cd api-docs
    ```
 
 2. Install dependencies:
