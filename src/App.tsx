@@ -7,6 +7,7 @@ import IntroductionPage from "./pages/IntroductionPage";
 import AuthenticationPage from "./pages/AuthenticationPage";
 import EndpointDetailPage from "./pages/EndpointDetailPage";
 import NotFoundPage from './pages/NotFoundPage';
+import UsageGuidelinesPage from './pages/UsageGuidelinesPage';
 
 const DocsLayout = () => (
   <div className="flex min-h-screen bg-white dark:bg-gray-950">
@@ -26,6 +27,7 @@ function App() {
         <Route index element={<IntroductionPage />} />{" "}
         <Route path="introduction" element={<IntroductionPage />} />
         <Route path="authentication" element={<AuthenticationPage />} />
+        <Route path="usage-guidelines" element={<UsageGuidelinesPage />} />
         <Route
           path="api-reference/:endpointId"
           element={<EndpointDetailPage />}

@@ -84,7 +84,12 @@ const Sidebar: React.FC = () => {
         >
           Authentication
         </NavLink>
-
+        <NavLink
+            to="/usage-guidelines"
+            className={({ isActive }) => `${linkBaseClasses} ${isActive ? linkActiveClasses : linkIdleClasses}`}
+        >
+            Usage Guidelines
+        </NavLink>
         {/* Dynamic Endpoint Links */}
         {Object.entries(groupedEndpoints).map(([groupName, endpoints]) => (
           <div key={groupName}>
