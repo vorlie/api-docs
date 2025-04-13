@@ -87,7 +87,7 @@ const AuthenticationPage: React.FC = () => {
             rel="noopener noreferrer"
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            Vorlie API Discord Server
+            Miko's Shrine (Support Server)
           </a>
           .
         </li>
