@@ -48,7 +48,11 @@ const EndpointDetailPage: React.FC = () => {
   const examplePath = endpoint.path.replace(/:(\w+)/g, "{$1}");
   const fullUrl = `${baseUrl}${examplePath}`;
   const apiKeyPlaceholder =
-    endpoint.group === "users" ? "YOUR_ADMIN_API_KEY" : "YOUR_ACTIONS_API_KEY";
+  endpoint.id === "delete-action" && endpoint.group === "actions"
+    ? "YOUR_ADMIN_API_KEY"
+    : endpoint.group === "users"
+    ? "YOUR_ADMIN_API_KEY"
+    : "YOUR_ACTIONS_API_KEY";
 
   // cURL Example generation
   let curlCommand = `curl -X ${endpoint.method} '${fullUrl}' \\\n  -H 'Authorization: Bearer ${apiKeyPlaceholder}'`;
