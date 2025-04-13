@@ -79,7 +79,7 @@ export const apiEndpoints: ApiEndpoint[] = [
       { field: 'tag', description: 'The category/tag associated with the gif.' },
     ],
     responseCodes: [
-      { code: 200, description: 'Success', success: true },
+      { code: 201, description: 'Success', success: true },
       { code: 401, description: 'Unauthorized', success: false },
     ],
   },
