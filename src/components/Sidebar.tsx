@@ -57,7 +57,7 @@ const Sidebar: React.FC = () => {
           to="/"
           className="text-lg font-semibold whitespace-nowrap text-gray-800 dark:text-gray-200"
         >
-          API Docs
+          Documentation
         </NavLink>
       </div>
 
