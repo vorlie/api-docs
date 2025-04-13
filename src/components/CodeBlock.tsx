@@ -18,7 +18,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
   return (
     <div className="code-block my-4">
       {" "}
-      <div className="rounded-xl overflow-x-auto">
+      <div className="rounded-md overflow-x-auto">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeHighlight]}
