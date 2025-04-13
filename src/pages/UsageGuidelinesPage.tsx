@@ -128,8 +128,7 @@ const UsageGuidelinesPage: React.FC = () => {
           {" "}
           {/* Override prose margin, ADDED IP BAN INFO */}
           Repeat violations or attempts to abuse the submission system may
-          result in further action, potentially including the revocation of your
-          Actions API key or{" "}
+          result in further action, potentially including {" "}
           <strong className="text-red-600 dark:text-red-500">
             blocking access from your IP address
           </strong>
