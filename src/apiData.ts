@@ -102,7 +102,7 @@ export const apiEndpoints: ApiEndpoint[] = [
   {
     id: 'get-action-by-tag',
     method: 'GET',
-    path: '/v1/actions/:tag',
+    path: '/v1/actions/tag/:tag',
     group: 'actions',
     description: 'Retrieves a GIF action by tag.',
     responseBody: `{
