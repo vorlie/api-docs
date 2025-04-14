@@ -1,18 +1,7 @@
 // src/pages/UsageGuidelinesPage.tsx
 import React from "react";
 import { Link } from "react-router-dom";
-
-// Helper component for inline code styling
-const InlineCode: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <code className="bg-gray-200 dark:bg-gray-700/80 text-gray-800 dark:text-gray-300 font-mono text-sm px-1.5 py-0.5 rounded mx-0.5">
-    {" "}
-    {/* Slightly more padding */}
-    {children}
-  </code>
-);
-
-// Simple Divider Component (Optional, if not using prose's default hr)
-// const Hr = () => <hr className="my-8 border-gray-200 dark:border-gray-700" />;
+import InlineCode from "../components/InlineCode";
 
 const UsageGuidelinesPage: React.FC = () => {
   return (
@@ -48,7 +37,6 @@ const UsageGuidelinesPage: React.FC = () => {
         purpose of this feature, all submissions are subject to the following
         rules:
       </p>
-      {/* Added background and padding to the list for emphasis */}
       <ul className="text-base !my-6 !pl-5 space-y-3 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
         <li>
           <strong className="font-semibold text-gray-900 dark:text-gray-100">
@@ -102,7 +90,6 @@ const UsageGuidelinesPage: React.FC = () => {
       <h2 className="!mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
         Monitoring and Enforcement
       </h2>
-      {/* Added background/border to emphasize this section */}
       <div className="text-base bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 dark:border-yellow-600 p-4 rounded-md !my-6">
         <p className="!my-0">
           {" "}

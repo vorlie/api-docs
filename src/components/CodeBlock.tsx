@@ -1,13 +1,12 @@
 // src/components/CodeBlock.tsx
-import React, { useState } from "react"; // Import useState
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 
-// Import the highlight.js style you want (if not imported globally)
 import "highlight.js/styles/tokyo-night-dark.css";
 
-// --- Optional: Copy Icon Component ---
+
 const CopyIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg
     className={className}

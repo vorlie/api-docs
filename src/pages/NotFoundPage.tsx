@@ -11,7 +11,7 @@ const NotFoundPage: React.FC = () => {
         Oops! The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
       </p>
       <Link
-        to="/" // Link back to the homepage (Introduction)
+        to="/"
         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-150"
       >
         Go to Homepage

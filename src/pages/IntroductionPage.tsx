@@ -2,17 +2,14 @@
 import React from "react";
 import CodeBlock from "../components/CodeBlock";
 import { Link } from "react-router-dom";
-import InlineCode from "../components/InlineCode"; // Use consistent import path
+import InlineCode from "../components/InlineCode";
 
-// --- UPDATED Quick Start Code (No Auth Header) ---
 const quickStartExample = `curl -X GET https://api.vorlie.pl/v1/actions/tags`;
 // -------------------------------------------------
 
 const IntroductionPage: React.FC = () => {
   return (
-    // Added base text colors
     <div className="text-gray-800 dark:text-gray-200">
-      {/* Consistent H1 style */}
       <h1 className="text-3xl font-bold !mb-8 border-b border-gray-300 dark:border-gray-700 pb-3">
         Introduction
       </h1>
@@ -35,7 +32,7 @@ const IntroductionPage: React.FC = () => {
       </p>
       <CodeBlock language="plaintext" code="https://api.vorlie.pl/v1" />
 
-      {/* Authentication Section - MODIFIED Text */}
+      {/* Authentication Section */}
       <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
         Authentication
       </h2>
@@ -58,7 +55,7 @@ const IntroductionPage: React.FC = () => {
         for full details on key types and how to obtain one if needed.
       </p>
 
-      {/* Quick Start Section - MODIFIED Text and Example */}
+      {/* Quick Start Section */}
       <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
         Quick Start Example
       </h2>
@@ -79,7 +76,7 @@ const IntroductionPage: React.FC = () => {
         version prefix (e.g., `/v2`).
       </p>
 
-      {/* Rate Limiting Section - Text unchanged, just styling */}
+      {/* Rate Limiting Section */}
       <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
         Rate Limiting
       </h2>

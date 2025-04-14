@@ -1,10 +1,9 @@
 // src/pages/AuthenticationPage.tsx
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom"; 
 import CodeBlock from "../components/CodeBlock";
-import InlineCode from "../components/InlineCode"; // Use consistent import path
+import InlineCode from "../components/InlineCode"; 
 
-// Import highlight.js CSS (e.g., in CodeBlock or globally)
 import "highlight.js/styles/tokyo-night-dark.css";
 
 // --- Optional Icons ---
@@ -31,7 +30,6 @@ const StepNumber = ({ number }: { number: number }) => (
 );
 // --------------------
 
-// --- UPDATED Example HTTP Request (showing PUT which needs auth) ---
 const httpExample = `PUT /v1/actions HTTP/1.1
 Host: api.vorlie.pl
 Authorization: Bearer YOUR_ACTIONS_API_KEY
@@ -40,7 +38,6 @@ Content-Type: application/json`;
 
 const AuthenticationPage: React.FC = () => {
   return (
-    // Removed prose class, apply base text colors
     <div className="text-gray-800 dark:text-gray-200">
       <h1 className="text-3xl font-bold !mb-8 border-b border-gray-300 dark:border-gray-700 pb-3">
         Authentication
@@ -50,7 +47,6 @@ const AuthenticationPage: React.FC = () => {
       <h2 className="text-2xl font-semibold !mt-6 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
         Overview
       </h2>
-      {/* MODIFIED Text */}
       <p className="text-base md:text-lg !mb-4">
         Most write operations (<InlineCode>PUT</InlineCode>,{" "}
         <InlineCode>DELETE</InlineCode>) and all user management requests (
@@ -74,7 +70,6 @@ const AuthenticationPage: React.FC = () => {
         </Link>
         ):
       </p>
-      {/* UPDATED Example to show PUT */}
       <CodeBlock language="http" code={httpExample} />
       <p className="!mt-4 !mb-6 text-base md:text-lg">
         Replace <InlineCode>YOUR_ACTIONS_API_KEY</InlineCode> with your actual
@@ -109,7 +104,6 @@ const AuthenticationPage: React.FC = () => {
             <strong className="font-semibold text-gray-900 dark:text-gray-100">
               Actions Key:
             </strong>
-            {/* MODIFIED Description */}
             <p className="text-sm text-gray-600 dark:text-gray-400 !my-0">
               Provides access to <strong>write</strong> operations under{" "}
               <InlineCode>/v1/actions/</InlineCode> (specifically{" "}
@@ -167,7 +161,7 @@ const AuthenticationPage: React.FC = () => {
           <span>
             Join the official Discord server:{" "}
             <a
-              href="https://vorlie.pl/?link=miko_support" // Ensure this link is correct
+              href="https://vorlie.pl/?link=miko_support"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 hover:underline"

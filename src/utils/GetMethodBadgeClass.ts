@@ -2,7 +2,6 @@
 import { ApiEndpoint } from "./apiData";
 
 const getMethodBadgeClass = (method: ApiEndpoint["method"]) => {
-  // ... (keep existing function)
   switch (method) {
     case "GET":
       return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";

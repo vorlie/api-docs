@@ -117,7 +117,6 @@ const EndpointDetailPage: React.FC = () => {
       code: jsCode,
     },
   ];
-  // Also update the placeholder text reminder
   const placeholderText = needsAuthExample
     ? `Remember to replace placeholders like <InlineCode>${apiKeyPlaceholder}</InlineCode> and path parameters.`
     : `Remember to replace path parameters (e.g., <InlineCode>{tag}</InlineCode>) if needed.`;
@@ -266,12 +265,10 @@ const EndpointDetailPage: React.FC = () => {
                   {examples.map((ex) => (
                     <Tab.Panel
                       key={ex.id}
-                      // Added base background/padding here for context
                       className={
                         "rounded-xl bg-gray-50 dark:bg-gray-800/50 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2"
                       }
                     >
-                      {/* Padding can be added to CodeBlock or here if needed */}
                       <CodeBlock language={ex.language} code={ex.code} />
                     </Tab.Panel>
                   ))}

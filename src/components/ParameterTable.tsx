@@ -1,7 +1,7 @@
 // src/components/ParameterTable.tsx
 import React from "react";
-import { ApiParameter } from "../utils/apiData"; // Import the interface
-import  InlineCode from "./InlineCode"; // Assuming you extracted InlineCode to its own file
+import { ApiParameter } from "../utils/apiData"; 
+import  InlineCode from "./InlineCode"; 
 
 interface ParameterTableProps {
   title: string;

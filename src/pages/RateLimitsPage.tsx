@@ -39,7 +39,6 @@ const CheckIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
 
 const RateLimitsPage: React.FC = () => {
   return (
-    // Keep prose for base typography, customize elements inside
     <div className="prose dark:prose-invert lg:prose-xl max-w-none text-gray-800 dark:text-gray-200">
       <h1 className="text-3xl font-bold !mb-8 border-b border-gray-300 dark:border-gray-700 pb-3">
         Rate Limiting
@@ -124,7 +123,6 @@ const RateLimitsPage: React.FC = () => {
       {/* Style the handling list */}
       <ul className="text-base !my-6 !pl-0 space-y-4">
         {" "}
-        {/* Removed list-disc, added more space */}
         <li className="flex items-start gap-3">
           <CheckIcon className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
           <span>
