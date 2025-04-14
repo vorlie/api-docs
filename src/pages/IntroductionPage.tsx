@@ -2,106 +2,102 @@
 import React from "react";
 import CodeBlock from "../components/CodeBlock";
 import { Link } from "react-router-dom";
+import InlineCode from "../components/InlineCode"; // Use consistent import path
 
-// Helper component for inline code styling
-const InlineCode: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <code className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-mono text-sm px-1 py-0.5 rounded">
-    {children}
-  </code>
-);
-
-// Example Quick Start Code
-const quickStartExample = `curl -X GET \\
-  https://api.vorlie.pl/v1/actions/tags \\
-  -H 'Authorization: Bearer YOUR_API_KEY'`;
+// --- UPDATED Quick Start Code (No Auth Header) ---
+const quickStartExample = `curl -X GET https://api.vorlie.pl/v1/actions/tags`;
+// -------------------------------------------------
 
 const IntroductionPage: React.FC = () => {
   return (
-    <div className="text-gray-900 dark:text-gray-100">
-      <h1 className="text-3xl font-bold mb-6 border-b border-gray-300 dark:border-gray-700 pb-2">
+    // Added base text colors
+    <div className="text-gray-800 dark:text-gray-200">
+      {/* Consistent H1 style */}
+      <h1 className="text-3xl font-bold !mb-8 border-b border-gray-300 dark:border-gray-700 pb-3">
         Introduction
       </h1>
-      <p className="mb-6 text-base">
-        This API provides programmatic access to interact with user verification
-        data managed by Vorlie and a collection of curated GIF actions
-        categorized by tags. You can use this API to retrieve verified user
+
+      {/* Lead Paragraph style */}
+      <p className="text-lg text-gray-600 dark:text-gray-400 !mb-8">
+        Welcome! This API provides programmatic access to interact with user
+        verification data managed by Vorlie and a collection of curated GIF
+        actions categorized by tags. Use this API to retrieve verified user
         lists, check specific user status, manage GIF actions, and more.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">Base URL</h2>
-      <p className="mb-4 text-base">
-        All API endpoints are relative to the following base URL:
+      {/* Consistent H2 style */}
+      <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+        Base URL
+      </h2>
+      <p className="text-base !mb-4">
+        All API endpoints described in this documentation are relative to the
+        following base URL:
       </p>
-      <CodeBlock language="plaintext" code="https://api.vorlie.pl/" />
+      <CodeBlock language="plaintext" code="https://api.vorlie.pl/v1" />
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">Authentication</h2>
-      <p className="mb-4 text-base">
-        Most requests to the Vorlie API require authentication. Authentication
-        is handled via Bearer Tokens passed in the{" "}
-        <InlineCode>Authorization</InlineCode> header.
+      {/* Authentication Section - MODIFIED Text */}
+      <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+        Authentication
+      </h2>
+      <p className="text-base !mb-4">
+        Most write requests (<InlineCode>PUT</InlineCode>,{" "}
+        <InlineCode>DELETE</InlineCode>) and all user management requests
+        require authentication via a Bearer Token in the{" "}
+        <InlineCode>Authorization</InlineCode> header. However,{" "}
+        <strong className="font-semibold">GET requests for actions data</strong>{" "}
+        (like listing tags or getting GIFs) are public and do not require a key.
       </p>
       <p className="text-base">
-        You can find detailed information on obtaining and using your API key on
-        the{" "}
+        Please see the{" "}
         <Link
           to="/authentication"
-          className="text-blue-600 dark:text-blue-400 hover:underline"
+          className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
         >
-          Authentication
+          Authentication page
         </Link>{" "}
-        page.
+        for full details on key types and how to obtain one if needed.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">Quick Start Example</h2>
-      <p className="mb-4 text-base">
-        Here's a quick example using cURL to fetch the available action tags
-        (replace <InlineCode>YOUR_API_KEY</InlineCode> with your actual key):
+      {/* Quick Start Section - MODIFIED Text and Example */}
+      <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+        Quick Start Example
+      </h2>
+      <p className="text-base !mb-4">
+        Here's a quick example using cURL to fetch the available action tags.
+        This request{" "}
+        <strong className="font-semibold">does not require an API key</strong>:
       </p>
       <CodeBlock language="bash" code={quickStartExample} />
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">Versioning</h2>
-      <p className="mb-4 text-base">
+      {/* Versioning Section */}
+      <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+        Versioning
+      </h2>
+      <p className="text-base !mb-4">
         The API is versioned using a path prefix. The current stable version is{" "}
-        <InlineCode>/v1</InlineCode>. Breaking changes will result in a new
-        version prefix.
+        <InlineCode>/v1</InlineCode>. Breaking changes may result in a future
+        version prefix (e.g., `/v2`).
       </p>
 
-      {/* --- Updated Rate Limiting Section with Scope --- */}
-      <h2 className="text-2xl font-semibold mt-8 mb-4">Rate Limiting</h2>
-      <p className="mb-4 text-base">
-        To ensure fair usage for everyone, the API enforces rate limiting
-        applied <strong>per source IP address</strong>. The current limit is <strong>60 requests
-        per 1 minute</strong>.
+      {/* Rate Limiting Section - Text unchanged, just styling */}
+      <h2 className="text-2xl font-semibold !mt-10 !mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+        Rate Limiting
+      </h2>
+      <p className="text-base !mb-4">
+        To ensure fair usage, the API enforces rate limits (currently 60
+        requests per minute per IP). Exceeding the limit will result in an{" "}
+        <InlineCode>HTTP 429</InlineCode> error.
       </p>
-      <p className="mb-4 text-base">
-        Exceeding this limit will result in an{" "}
-        <InlineCode>HTTP 429 Too Many Requests</InlineCode> error response. When
-        you receive a 429 error, the response will include the following headers
-        to help you manage your request rate:
-      </p>
-      <ul className="list-disc list-inside mb-4 text-base space-y-1">
-        <li>
-          <InlineCode>Retry-After</InlineCode>: The number of seconds to wait
-          before making another request.
-        </li>
-        <li>
-          <InlineCode>X-RateLimit-Limit</InlineCode>: The maximum number of
-          requests allowed in the time window (currently 60).
-        </li>
-        <li>
-          <InlineCode>X-RateLimit-Remaining</InlineCode>: The number of requests
-          remaining in the current window (will be 0 when limited).
-        </li>
-        <li>
-          <InlineCode>X-RateLimit-Reset</InlineCode>: The remaining time in
-          seconds until the rate limit window resets.
-        </li>
-      </ul>
       <p className="text-base">
-        Please implement appropriate error handling and backoff strategies in
-        your application to respect these limits.
+        Please see the dedicated{" "}
+        <Link
+          to="/rate-limits"
+          className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+        >
+          Rate Limits page
+        </Link>{" "}
+        for detailed information on limits, headers, and handling strategies.
       </p>
-      {/* --------------------------------------------- */}
     </div>
   );
 };

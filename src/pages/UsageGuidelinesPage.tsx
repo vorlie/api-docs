@@ -19,7 +19,7 @@ const UsageGuidelinesPage: React.FC = () => {
     // Keep prose for base typography, customize elements inside
     <div className="prose dark:prose-invert lg:prose-xl max-w-none text-gray-800 dark:text-gray-200">
       {/* --- Page Title --- */}
-      <h1 className="!mb-8 border-b border-gray-300 dark:border-gray-700 pb-3">
+      <h1 className="text-3xl font-bold !mb-8 border-b border-gray-300 dark:border-gray-700 pb-3">
         {" "}
         {/* Adjusted margin, border */}
         API Usage Guidelines
@@ -75,7 +75,7 @@ const UsageGuidelinesPage: React.FC = () => {
             Safe For Work (SFW):
           </strong>{" "}
           Absolutely{" "}
-          <strong className="text-red-600 dark:text-red-400">no NSFW</strong>{" "}
+          <strong className="text-red-600 dark:text-red-400">NO NSFW</strong>{" "}
           (Not Safe For Work) content is permitted. This includes explicit
           nudity, sexual content, excessive gore, or overly suggestive themes.
           Submissions should be generally appropriate for a wide audience.
@@ -145,7 +145,7 @@ const UsageGuidelinesPage: React.FC = () => {
         <li>
           Respect the{" "}
           <Link
-            to="/introduction"
+            to="/rate-limits"
             className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
           >
             Rate Limits

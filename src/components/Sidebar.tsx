@@ -1,7 +1,13 @@
 // src/components/Sidebar.tsx
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { apiEndpoints, ApiEndpoint } from "../apiData";
+import { apiEndpoints, ApiEndpoint } from "../utils/apiData";
+import getMethodBadgeClass from "../utils/GetMethodBadgeClass";
+
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void; // Function to close the sidebar (toggle)
+}
 
 const groupEndpoints = (endpoints: ApiEndpoint[]) => {
   return endpoints.reduce((acc, endpoint) => {
@@ -14,27 +20,26 @@ const groupEndpoints = (endpoints: ApiEndpoint[]) => {
   }, {} as Record<string, ApiEndpoint[]>);
 };
 
-// --- Helper for Method BADGE Colors ---
-const getMethodBadgeClass = (method: ApiEndpoint["method"]) => {
-  // Returns background and text colors suitable for a badge
-  switch (method) {
-    case "GET":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
-    case "POST":
-      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
-    case "PUT":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
-    case "DELETE":
-      return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
-    case "PATCH":
-      return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
-    default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-  }
-};
+const CloseIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M6 18 18 6M6 6l12 12"
+    />
+  </svg>
+);
+
 // ---------------------------------------
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const groupedEndpoints = groupEndpoints(apiEndpoints);
 
   // Styling classes
@@ -48,17 +53,39 @@ const Sidebar: React.FC = () => {
     "text-xs font-semibold text-gray-500 dark:text-white uppercase tracking-wider mt-6 mb-2 px-3";
 
   return (
-    <aside className="fixed top-0 left-0 z-40 w-64 h-screen bg-white dark:bg-gray-800/30 border-r border-gray-200 dark:border-gray-700/50 flex flex-col">
+    <aside
+      className={`
+            fixed top-0 left-0 z-50 w-64 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700/50 flex flex-col
+            transform transition-transform duration-300 ease-in-out
+            ${
+              isOpen ? "translate-x-0" : "-translate-x-full"
+            }
+            lg:translate-x-0 lg:sticky lg:inset-y-0 lg:left-0 lg:z-auto
+        `}
+      aria-label="Sidebar" // Accessibility
+    >
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700/50 h-16 flex items-center">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700/50 h-16 flex items-center justify-between">
         {/* Logo and Title */}
-        <img src="/icon.png" alt="Vorlie Logo" className="h-8 w-auto mr-2" />
-        <NavLink
-          to="/"
-          className="text-lg font-semibold whitespace-nowrap text-gray-800 dark:text-gray-200"
+        <div className="flex items-center">
+          <img src="/icon.png" alt="Vorlie Logo" className="h-8 w-auto mr-2" />
+          <NavLink
+            to="/"
+            className="text-lg font-semibold whitespace-nowrap text-gray-800 dark:text-gray-200"
+            onClick={onClose} // Close sidebar on title click on mobile
+          >
+            Documentation
+          </NavLink>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white rounded-lg p-1.5 lg:hidden" // Only show on small screens
+          aria-label="Close sidebar"
         >
-          Documentation
-        </NavLink>
+          <CloseIcon />
+        </button>
+        {/* ----------------------------------------- */}
       </div>
 
       {/* Navigation */}
@@ -71,6 +98,7 @@ const Sidebar: React.FC = () => {
               isActive ? linkActiveClasses : linkIdleClasses
             }`
           }
+          onClick={onClose}
         >
           Introduction
         </NavLink>
@@ -81,14 +109,42 @@ const Sidebar: React.FC = () => {
               isActive ? linkActiveClasses : linkIdleClasses
             }`
           }
+          onClick={onClose}
         >
           Authentication
         </NavLink>
         <NavLink
-            to="/usage-guidelines"
-            className={({ isActive }) => `${linkBaseClasses} ${isActive ? linkActiveClasses : linkIdleClasses}`}
+          to="/usage-guidelines"
+          className={({ isActive }) =>
+            `${linkBaseClasses} ${
+              isActive ? linkActiveClasses : linkIdleClasses
+            }`
+          }
+          onClick={onClose}
         >
-            Usage Guidelines
+          Usage Guidelines
+        </NavLink>
+        <NavLink
+          to="/status-codes"
+          className={({ isActive }) =>
+            `${linkBaseClasses} ${
+              isActive ? linkActiveClasses : linkIdleClasses
+            }`
+          }
+          onClick={onClose}
+        >
+          Status Codes
+        </NavLink>
+        <NavLink
+          to="/rate-limits"
+          className={({ isActive }) =>
+            `${linkBaseClasses} ${
+              isActive ? linkActiveClasses : linkIdleClasses
+            }`
+          }
+          onClick={onClose}
+        >
+          Rate Limits
         </NavLink>
         {/* Dynamic Endpoint Links */}
         {Object.entries(groupedEndpoints).map(([groupName, endpoints]) => (

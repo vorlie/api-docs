@@ -1,36 +1,14 @@
 // src/pages/EndpointDetailPage.tsx
 import React from "react"; // Import Fragment for Tab component
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, Link } from "react-router-dom";
 import { Tab } from "@headlessui/react"; // Import Tab components
-import { apiEndpoints, ApiEndpoint } from "../apiData";
+
 import CodeBlock from "../components/CodeBlock";
-import cn from "classnames"; // Optional utility for conditional classes
+import ParameterTable from "../components/ParameterTable"; // Table for displaying parameters
+// import InlineCode from "../components/InlineCode"; // Helper component for inline code styling
 
-// Helper component for inline code styling
-const InlineCode: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <code className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-mono text-sm px-1 py-0.5 rounded mx-0.5">
-    {children}
-  </code>
-);
-
-// Helper for Method Badge Colors
-const getMethodBadgeClass = (method: ApiEndpoint["method"]) => {
-  // ... (keep existing function)
-  switch (method) {
-    case "GET":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
-    case "POST":
-      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
-    case "PUT":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
-    case "DELETE":
-      return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
-    case "PATCH":
-      return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
-    default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-  }
-};
+import { apiEndpoints } from "../utils/apiData";
+import getMethodBadgeClass from "../utils/GetMethodBadgeClass"; // Helper for Method Badge Colors
 
 // Simple Divider Component
 const Hr = () => <hr className="my-8 border-gray-200 dark:border-gray-700" />;
@@ -47,15 +25,22 @@ const EndpointDetailPage: React.FC = () => {
   const baseUrl = "https://api.vorlie.pl";
   const examplePath = endpoint.path.replace(/:(\w+)/g, "{$1}");
   const fullUrl = `${baseUrl}${examplePath}`;
-  const apiKeyPlaceholder =
-  endpoint.id === "delete-action" && endpoint.group === "actions"
-    ? "YOUR_ADMIN_API_KEY"
-    : endpoint.group === "users"
-    ? "YOUR_ADMIN_API_KEY"
-    : "YOUR_ACTIONS_API_KEY";
+  // Determine if auth is needed FOR EXAMPLES
+  const needsAuthExample = endpoint.requiresAuth !== false; // True if requiresAuth is true or undefined
+
+  // Define apiKeyPlaceholder only if needed
+  const apiKeyPlaceholder = needsAuthExample
+    ? endpoint.group === "users" ||
+      (endpoint.id === "delete-action" && endpoint.group === "actions")
+      ? "YOUR_ADMIN_API_KEY"
+      : "YOUR_ACTIONS_API_KEY"
+    : ""; // Empty if not needed
 
   // cURL Example generation
-  let curlCommand = `curl -X ${endpoint.method} '${fullUrl}' \\\n  -H 'Authorization: Bearer ${apiKeyPlaceholder}'`;
+  let curlCommand = `curl -X ${endpoint.method} '${fullUrl}'`;
+  if (needsAuthExample) {
+    curlCommand += ` \\\n  -H 'Authorization: Bearer ${apiKeyPlaceholder}'`; // Conditionally add Auth
+  }
   if (endpoint.requestBody) {
     curlCommand += ` \\\n  -H 'Content-Type: application/json' \\\n  -d '${endpoint.requestBody.replace(
       /'/g,
@@ -64,18 +49,27 @@ const EndpointDetailPage: React.FC = () => {
   }
 
   // Python Example generation
-  let pythonCode = `import requests\n\nurl = "${fullUrl}"\napi_key = "${apiKeyPlaceholder}" # Replace with your actual key\n\nheaders = {\n    "Authorization": f"Bearer {api_key}"`;
-  if (endpoint.requestBody)
-    pythonCode += `,\n    "Content-Type": "application/json"`;
-  pythonCode += `\n}\n\n`;
+  let pythonCode = `import requests\n\nurl = "${fullUrl}"\n`;
+  let pythonHeaders = "{";
+  if (needsAuthExample) {
+    pythonCode += `api_key = "${apiKeyPlaceholder}" # Replace with your actual key\n`;
+    pythonHeaders += `\n    "Authorization": f"Bearer {api_key}"`;
+  }
+  if (endpoint.requestBody) {
+    if (needsAuthExample) pythonHeaders += ","; // Add comma if Auth header was added
+    pythonHeaders += `\n    "Content-Type": "application/json"`;
+  }
+  pythonHeaders += pythonHeaders === "{" ? "" : "\n}"; // Close headers dict only if not empty
+  pythonCode += `\nheaders = ${pythonHeaders || "{}"}\n\n`; // Add headers dict (or empty dict)
+
   if (endpoint.requestBody) {
     let bodyData = `json_body = ${endpoint.requestBody}`;
     try {
       const parsed = JSON.parse(endpoint.requestBody);
       bodyData = `json_body = ${JSON.stringify(parsed, null, 2)}`;
     } catch (e) {
-      // If JSON parsing fails, fallback to original string
-      console.error("Failed to parse request body JSON:", e);
+      // If JSON parsing fails, fall back to original string
+      console.error("Failed to parse JSON body:", e);
       bodyData = `json_body = '''${endpoint.requestBody}'''`;
     }
     pythonCode += `${bodyData}\n\nresponse = requests.request("${endpoint.method}", url, headers=headers, json=json_body)\n`;
@@ -85,12 +79,31 @@ const EndpointDetailPage: React.FC = () => {
   pythonCode += `\nprint(response.status_code)\nprint(response.json())`;
 
   // JavaScript Example generation
-  let jsCode = `const url = "${fullUrl}";\nconst apiKey = "${apiKeyPlaceholder}"; // Replace with your actual key\n\nconst options = {\n  method: "${endpoint.method}",\n  headers: {\n    "Authorization": \`Bearer \${apiKey}\``;
-  if (endpoint.requestBody)
-    jsCode += `,\n    "Content-Type": "application/json"`;
-  jsCode += `\n  }`;
-  if (endpoint.requestBody)
-    jsCode += `,\n  body: JSON.stringify(${endpoint.requestBody})`;
+  let jsCode = `const url = "${fullUrl}";\n`;
+  if (needsAuthExample) {
+    jsCode += `const apiKey = "${apiKeyPlaceholder}"; // Replace with your actual key\n`;
+  }
+  jsCode += `\nconst options = {\n  method: "${endpoint.method}",\n`;
+  let jsHeaders = "";
+  if (needsAuthExample) {
+    jsHeaders += `\n    "Authorization": \`Bearer \${apiKey}\``;
+  }
+  if (endpoint.requestBody) {
+    if (needsAuthExample) jsHeaders += ","; // Add comma if Auth header was added
+    jsHeaders += `\n    "Content-Type": "application/json"`;
+  }
+  if (jsHeaders !== "") {
+    // Only add headers object if there are headers
+    jsCode += `  headers: {${jsHeaders}\n  },\n`;
+  } else {
+    jsCode += `  headers: {},\n`; // Add empty headers object if none
+  }
+  if (endpoint.requestBody) {
+    jsCode += `  body: JSON.stringify(${endpoint.requestBody})\n`;
+  } else {
+    // Remove trailing comma if no body
+    jsCode = jsCode.replace(/,\n$/, "\n");
+  }
   jsCode += `\n};\n\nfetch(url, options)\n  .then(response => {\n    if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);\n    return response.json();\n  })\n  .then(data => console.log(data))\n  .catch(error => console.error('Error fetching data:', error));`;
   // -----------------------------
 
@@ -104,200 +117,173 @@ const EndpointDetailPage: React.FC = () => {
       code: jsCode,
     },
   ];
+  // Also update the placeholder text reminder
+  const placeholderText = needsAuthExample
+    ? `Remember to replace placeholders like <InlineCode>${apiKeyPlaceholder}</InlineCode> and path parameters.`
+    : `Remember to replace path parameters (e.g., <InlineCode>{tag}</InlineCode>) if needed.`;
 
   return (
-    <div className="prose dark:prose-invert lg:prose-xl max-w-none text-gray-900 dark:text-gray-100">
+    <div className="text-gray-900 dark:text-gray-100">
       {/* Endpoint Title Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 mb-6">
+      <div className="flex flex-row flex-wrap items-baseline gap-x-3 gap-y-1 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
         <span
-          className={`flex-shrink-0 text-sm font-mono font-bold px-2.5 py-1 rounded ${getMethodBadgeClass(
-            endpoint.method
-          )} mb-2 sm:mb-0`}
+          className={`
+            w-fit
+            flex-shrink-0 text-sm font-mono font-bold px-2.5 py-1 rounded
+            ${getMethodBadgeClass(endpoint.method)}
+            /* Removed mb-2 sm:mb-0 and self-start */
+          `}
         >
           {endpoint.method}
         </span>
-        <h1 className="text-2xl lg:text-3xl font-mono !my-0 break-all">
+        <h1 className="text-xl lg:text-2xl font-semibold font-mono !my-0 break-all text-gray-800 dark:text-gray-200">
           {endpoint.path}
         </h1>
       </div>
-
       {/* Description */}
-      <p className="text-base text-gray-600 dark:text-gray-400 mt-1 mb-8">
+      <p className="text-base lg:text-lg text-gray-600 dark:text-gray-400 mt-1 mb-8">
         {endpoint.description}
       </p>
-
-      <Hr />
-
-      {/* --- Parameters Section (Kept for Reference) --- */}
-      <h2 className="text-xl lg:text-2xl font-semibold !mb-4">Parameters</h2>
-      {endpoint.path.includes(":") ? (
-        <div className="mb-6">
-          <h3 className="text-lg font-medium !mt-0 !mb-3">Path Parameters</h3>
-          <div className="overflow-x-auto">
-            {/* ... (existing table structure) ... */}
-            <table className="w-full text-sm">
-              <thead className="text-left font-semibold border-b border-gray-300 dark:border-gray-600">
-                <tr>
-                  <th className="py-2 pr-4">Name</th>
-                  <th className="py-2 pr-4">Type</th>
-                  <th className="py-2">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {endpoint.path
-                  .split("/")
-                  .filter((p) => p.startsWith(":"))
-                  .map((p) => (
-                    <tr
-                      key={p}
-                      className="border-b border-gray-200 dark:border-gray-700"
+      {/* Two Column Layout (Large Screens) */}
+      <div className="lg:flex lg:gap-8 xl:gap-12">
+        {/* Left Column (Content Flow) */}
+        <div className="lg:w-2/3 min-w-0">
+          {" "}
+          {/* min-w-0 prevents flex overflow */}
+          {/* Parameters Section */}
+          <h2 className="text-xl lg:text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+            Parameters
+          </h2>
+          <ParameterTable
+            title="Path Parameters"
+            parameters={endpoint.pathParameters}
+          />
+          <ParameterTable
+            title="Query Parameters"
+            parameters={endpoint.queryParameters}
+            caption="Parameters appended to the URL after '?'."
+          />
+          <ParameterTable
+            title="Request Headers"
+            parameters={endpoint.requestHeaders}
+          />
+          {/* Request Body */}
+          {endpoint.requestBodySchema && ( // Check if schema exists
+            <>
+              <Hr />
+              <ParameterTable
+                title="Request Body Schema"
+                parameters={endpoint.requestBodySchema}
+              />
+              {/* ----------------------------------------------------- */}
+            </>
+          )}
+          {/* Response Information */}
+          <Hr />
+          <h2 className="text-xl lg:text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+            Responses
+          </h2>
+          {/* Explanation / Field Descriptions */}
+          {endpoint.responseFieldDescriptions &&
+            endpoint.responseFieldDescriptions.length > 0 && (
+              <div className="mb-6">
+                {/* Use ParameterTable to display the response schema details */}
+                <ParameterTable
+                  title="Response Field Descriptions"
+                  parameters={endpoint.responseFieldDescriptions}
+                />
+              </div>
+            )}
+          {/* Response Body Example */}
+          {endpoint.responseBody && (
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-3">Body Example</h3>
+              <CodeBlock language="json" code={endpoint.responseBody} />
+            </div>
+          )}
+          {/* Response Codes */}
+          {endpoint.responseCodes && endpoint.responseCodes.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-3">Status Codes</h3>
+              <ul className="!my-0 !pl-0 space-y-2">
+                {endpoint.responseCodes.map((item) => (
+                  <li
+                    key={item.code}
+                    className="text-sm flex items-center gap-3"
+                  >
+                    <strong
+                      className={`font-semibold font-mono px-1.5 py-0.5 rounded text-xs ${
+                        item.success
+                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400"
+                          : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-400"
+                      }`}
                     >
-                      <td className="py-2 pr-4 font-mono">{p.substring(1)}</td>
-                      <td className="py-2 pr-4 font-mono">string</td>
-                      <td className="py-2 text-gray-600 dark:text-gray-400">
-                        {/* Add description */}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+                      {item.code}
+                    </strong>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      {item.description}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <Link to="/errors" className="text-blue-600 hover:underline">
+                Error Reference
+              </Link>
+            </div>
+          )}
         </div>
-      ) : (
-        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-          No path parameters required for this endpoint.
-        </p>
-      )}
-
-      {/* --- Request Examples Section (Using Tabs) --- */}
-      <Hr />
-      <h2 className="text-xl lg:text-2xl font-semibold !mb-3">
-        Request Examples
-      </h2>
-      <p className="text-sm text-gray-500 dark:text-gray-400 !mt-0 !mb-4">
-        Remember to replace placeholders like{" "}
-        <InlineCode>{apiKeyPlaceholder}</InlineCode> and path parameters (e.g.,{" "}
-        <InlineCode>
-          {examplePath.includes("{")
-            ? examplePath.match(/\{(\w+)\}/)?.[0] ?? "{parameter}"
-            : "{parameter}"}
-        </InlineCode>
-        ) with actual values.
-      </p>
-
-      <div className="w-full max-w-full px-0 pt-2">
-        {" "}
-        {/* Container for tabs */}
-        <Tab.Group>
-          <Tab.List className="flex space-x-1 rounded-lg bg-gray-200 dark:bg-gray-900/40 p-1">
-            {examples.map((ex) => (
-              <Tab
-                key={ex.id}
-                className={({ selected }) =>
-                  cn(
-                    // Using classnames utility (npm install classnames) or just template literals
-                    "w-full rounded-md py-1.5 text-sm font-medium leading-5",
-                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400", // Focus styling
-                    selected
-                      ? "bg-white dark:bg-gray-700 shadow text-blue-700 dark:text-white" // Selected tab style
-                      : "text-gray-600 hover:bg-white/[0.50] dark:text-gray-400 dark:hover:bg-white/[0.12] dark:hover:text-white" // Idle tab style
-                  )
-                }
-              >
-                {ex.name}
-              </Tab>
-            ))}
-          </Tab.List>
-          <Tab.Panels className="mt-2">
-            {examples.map((ex) => (
-              <Tab.Panel
-                key={ex.id}
-                className={cn(
-                  "rounded-xl bg-gray-50 dark:bg-gray-800/50 p-0", // Panel background (padding removed, CodeBlock has it)
-                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400" // Focus styling
-                )}
-              >
-                {/* Render CodeBlock inside the panel */}
-                <CodeBlock language={ex.language} code={ex.code} />
-              </Tab.Panel>
-            ))}
-          </Tab.Panels>
-        </Tab.Group>
-      </div>
-      {/* ----------------------------------------- */}
-
-      {/* Request Body */}
-      {endpoint.requestBody && (
-        <>
-          <Hr />
-          <h2 className="text-xl lg:text-2xl font-semibold !mb-3">
-            Request Body Schema
-          </h2>
-          <CodeBlock language="json" code={endpoint.requestBody} />
-        </>
-      )}
-
-      {/* Response Body */}
-      {endpoint.responseBody && (
-        <>
-          <Hr />
-          <h2 className="text-xl lg:text-2xl font-semibold !mb-3">
-            Response Body Example
-          </h2>
-          <CodeBlock language="json" code={endpoint.responseBody} />
-        </>
-      )}
-
-      {/* Explanation / Field Descriptions */}
-      {endpoint.explanation && endpoint.explanation.length > 0 && (
-        <>
-          <Hr />
-          <h2 className="text-xl lg:text-2xl font-semibold !mb-4">
-            Field Descriptions
-          </h2>
-          {/* ... (existing explanation list) ... */}
-          <ul className="!my-0 !pl-0 space-y-2">
-            {endpoint.explanation.map((item, index) => (
-              <li key={index} className="text-sm">
-                <InlineCode>{item.field}</InlineCode>
-                <span className="text-gray-600 dark:text-gray-400 ml-2">
-                  {item.description}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      {/* Response Codes */}
-      {endpoint.responseCodes && endpoint.responseCodes.length > 0 && (
-        <>
-          <Hr />
-          <h2 className="text-xl lg:text-2xl font-semibold !mb-4">
-            Response Codes
-          </h2>
-          {/* ... (existing response code list) ... */}
-          <ul className="!my-0 !pl-0 space-y-2">
-            {endpoint.responseCodes.map((item, index) => (
-              <li key={index} className="text-sm flex items-center gap-3">
-                <strong
-                  className={`font-semibold font-mono px-1.5 py-0.5 rounded text-xs ${
-                    item.success
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-400"
-                  }`}
-                >
-                  {item.code}
-                </strong>
-                <span className="text-gray-600 dark:text-gray-400">
-                  {item.description}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
+        {/* End Left Column */}
+        {/* Right Column (Examples - Sticky) */}
+        <div className="lg:w-2/3 mt-10 lg:mt-0">
+          <div className="lg:sticky lg:top-24">
+            <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+              Request Examples
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 !mt-0 !mb-4" dangerouslySetInnerHTML={{ __html: placeholderText.replace(/<InlineCode>(.*?)<\/InlineCode>/g, '<code class="bg-gray-200 dark:bg-gray-700/80 text-gray-800 dark:text-gray-300 font-mono text-[0.875em] px-1.5 py-0.5 rounded mx-0.5">$1</code>')}}>
+            </p>
+            <div className="w-full max-w-full px-0">
+              <Tab.Group>
+                <Tab.List className="flex space-x-1 rounded-lg bg-gray-200 dark:bg-gray-900/40 p-1">
+                  {examples.map((ex) => (
+                    <Tab
+                      key={ex.id}
+                      // --- CORRECTED className logic ---
+                      className={({ selected }) =>
+                        `w-full rounded-md py-1.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 ${
+                          // Base and focus classes
+                          selected
+                            ? "bg-white dark:bg-gray-700 shadow text-blue-700 dark:text-white" // Selected classes
+                            : "text-gray-600 hover:bg-white/[0.50] dark:text-gray-400 dark:hover:bg-white/[0.12] dark:hover:text-white" // Idle classes
+                        }`
+                      }
+                      // ---------------------------------
+                    >
+                      {ex.name}
+                    </Tab>
+                  ))}
+                </Tab.List>
+                <Tab.Panels className="mt-2">
+                  {examples.map((ex) => (
+                    <Tab.Panel
+                      key={ex.id}
+                      // Added base background/padding here for context
+                      className={
+                        "rounded-xl bg-gray-50 dark:bg-gray-800/50 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2"
+                      }
+                    >
+                      {/* Padding can be added to CodeBlock or here if needed */}
+                      <CodeBlock language={ex.language} code={ex.code} />
+                    </Tab.Panel>
+                  ))}
+                </Tab.Panels>
+              </Tab.Group>
+            </div>
+          </div>
+        </div>{" "}
+        {/* End Right Column */}
+      </div>{" "}
+      {/* End Two Column Layout */}
+    </div> // End Main Wrapper
   );
 };
 
