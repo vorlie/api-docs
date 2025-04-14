@@ -76,12 +76,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
         {copyStatus === "copied" ? <CheckIcon /> : <CopyIcon />}
       </button>
       {/* ----------------- */}
-      {/* Apply padding to the Markdown container if needed, or let prose handle it */}
       <div className="rounded-xl overflow-x-auto">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeHighlight]}
-          // Using 'pre' directly is common within ReactMarkdown for hljs
           components={{
             pre: ({ ...props }) => (
               <pre {...props} className={`hljs language-${language}`} />
