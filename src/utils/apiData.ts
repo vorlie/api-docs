@@ -27,6 +27,16 @@ export interface ApiParameter {
   example?: string | number | boolean; // Optional example value
 }
 
+const commonActionsHeaders: ApiParameter[] = [
+  {
+    name: "Authorization",
+    type: "string",
+    required: true,
+    description: "Bearer token for authentication.",
+    example: "Bearer YOUR_ACTIONS_API_KEY",
+  },
+];
+
 const commonAdminHeaders: ApiParameter[] = [
   {
     name: "Authorization",
@@ -111,7 +121,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     path: "/v1/actions",
     group: "actions",
     description: "Creates a new GIF action.",
-    requestHeaders: [...commonAdminHeaders, jsonContentTypeHeader],
+    requestHeaders: [...commonActionsHeaders, jsonContentTypeHeader],
     requestBodySchema: [
       { name: "url", type: "string", required: true, description: "The direct link to the gif.", example: "https://example.com/gif.gif" },
       { name: "anime_name", type: "string", required: true, description: "The anime from which the gif originates.", example: "Example Anime" },
