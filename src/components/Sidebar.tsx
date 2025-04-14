@@ -22,18 +22,14 @@ const groupEndpoints = (endpoints: ApiEndpoint[]) => {
 
 const CloseIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
     className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    height="24px"
+    viewBox="0 -960 960 960"
+    width="24px"
+    fill="currentColor"
   >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6 18 18 6M6 6l12 12"
-    />
+    <path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z" />
   </svg>
 );
 
@@ -57,9 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       className={`
             fixed top-0 left-0 z-50 w-64 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700/50 flex flex-col
             transform transition-transform duration-300 ease-in-out
-            ${
-              isOpen ? "translate-x-0" : "-translate-x-full"
-            }
+            ${isOpen ? "translate-x-0" : "-translate-x-full"}
             lg:translate-x-0 lg:sticky lg:inset-y-0 lg:left-0 lg:z-auto
         `}
       aria-label="Sidebar" // Accessibility
