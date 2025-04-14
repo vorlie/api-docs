@@ -225,8 +225,8 @@ const EndpointDetailPage: React.FC = () => {
                   </li>
                 ))}
               </ul>
-              <Link to="/errors" className="text-blue-600 hover:underline">
-                Error Reference
+              <Link to="/status-codes" className="text-blue-600 hover:underline">
+                Status Codes Reference
               </Link>
             </div>
           )}
