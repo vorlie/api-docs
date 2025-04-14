@@ -138,10 +138,10 @@ const ErrorsPage: React.FC = () => {
           many seconds to wait before making another request. Refer to the Rate
           Limiting section on the{" "}
           <Link
-            to="/introduction"
+            to="/rate-limits"
             className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
           >
-            Introduction
+            Rate Limits
           </Link>{" "}
           page.
         </p>
