@@ -45,12 +45,15 @@ const DocsLayout = () => {
       {/* Main Content Area */}
       <div className="flex-1 min-w-0 bg-white dark:bg-gray-950 ">
         <div className="lg:hidden p-4 border-b border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-900 flex justify-between items-center sticky top-0 z-30">
+        <div className="flex items-center">
+          <img src="/icon.png" alt="Vorlie Logo" className="h-8 w-auto mr-2" />
           <NavLink
             to="/"
             className="text-lg font-semibold whitespace-nowrap text-gray-800 dark:text-gray-200"
           >
-            API Docs
+            Documentation
           </NavLink>
+        </div>
           <button
             onClick={toggleMobileMenu}
             className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
