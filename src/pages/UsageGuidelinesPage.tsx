@@ -3,6 +3,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import InlineCode from "../components/InlineCode";
 
+const ShowUserIp: React.FC = () => {
+  const [ip, setIp] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => setIp(data.ip))
+      .catch(() => setIp(null));
+  }, []);
+  if (!ip) return null;
+  return (
+    <p className="!mt-2 text-xs text-gray-500">
+      Your IP address: <span className="font-mono">{ip}</span>
+    </p>
+  );
+};
+
 const UsageGuidelinesPage: React.FC = () => {
   return (
     // Keep prose for base typography, customize elements inside
@@ -122,6 +138,8 @@ const UsageGuidelinesPage: React.FC = () => {
           . We appreciate your cooperation in keeping this resource useful and
           appropriate!
         </p>
+        {/* Show user's IP address if available */}
+        <ShowUserIp />
       </div>
 
       {/* --- General Usage Section --- */}
