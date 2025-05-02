@@ -39,7 +39,7 @@ const UsageGuidelinesPage: React.FC = () => {
       </p>
 
       {/* --- GIF Rules Section --- */}
-      <h2 className="!mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
+      <h2 className="text-2xl font-semibold !mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
         {" "}
         {/* Distinct heading */}
         GIF Submission Rules (<InlineCode>/v1/actions</InlineCode>)
@@ -103,7 +103,7 @@ const UsageGuidelinesPage: React.FC = () => {
       </ul>
 
       {/* --- Enforcement Section --- */}
-      <h2 className="!mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
+      <h2 className="text-2xl font-semibold !mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
         Monitoring and Enforcement
       </h2>
       <div className="text-base bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 dark:border-yellow-600 p-4 rounded-md !my-6">
@@ -143,7 +143,7 @@ const UsageGuidelinesPage: React.FC = () => {
       </div>
 
       {/* --- General Usage Section --- */}
-      <h2 className="!mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
+      <h2 className="text-2xl font-semibold !mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
         General API Usage
       </h2>
       <ul className="text-base !my-6 !pl-5 space-y-2">
