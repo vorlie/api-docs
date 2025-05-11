@@ -71,6 +71,14 @@ const ErrorsPage: React.FC = () => {
         </p>
       </ErrorEntry>
 
+      <ErrorEntry code={301} title="Moved Permanently">
+        <p>
+          The requested resource has been permanently moved to a new URL. The
+          response will include the new URL in the <InlineCode>Location</InlineCode>{" "}
+          header.
+        </p>
+      </ErrorEntry>
+
       {/* --- Client Errors (4xx) --- */}
       <h2 className="text-2xl font-semibold !mt-10 !mb-5 border-b border-gray-300 dark:border-gray-700 pb-2">
         Client Error Codes

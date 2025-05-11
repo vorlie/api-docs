@@ -115,6 +115,30 @@ export const apiEndpoints: ApiEndpoint[] = [
       { name: "verified_at", type: "integer", description: "The Unix timestamp of when they were verified." }
     ],
   },
+{
+    id: "get-user-by-id-banner",
+    method: "GET",
+    path: "/v1/user/:user_id/banner",
+    group: "user",
+    description: "Redirects to the Discord CDN URL for the user's banner image.",
+    requiresAuth: false,
+    pathParameters: [
+      {
+        name: "user_id",
+        type: "string",
+        required: true,
+        description: "The Discord ID of the user to retrieve the banner from.",
+      },
+    ],
+    responseBody: "",
+    responseCodes: [
+      { code: 302, description: "Redirects to the Discord CDN banner URL in the Location header.", success: true },
+      { code: 404, description: "Not Found", success: false },
+    ],
+    responseFieldDescriptions: [
+      { name: "Location", type: "string", description: "The Discord CDN URL for the user's banner image." }
+    ],
+  },
   {
     id: "put-actions",
     method: "PUT",
