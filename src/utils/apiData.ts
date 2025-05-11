@@ -80,9 +80,21 @@ export const apiEndpoints: ApiEndpoint[] = [
       { code: 401, description: "Unauthorized", success: false },
     ],
     responseFieldDescriptions: [
-      { name: "user_id", type: "string", description: "The Discord user's unique ID." },
-      { name: "username", type: "string", description: "The user's Discord username." },
-      { name: "verified_at", type: "integer", description: "The Unix timestamp of when they were verified." }
+      {
+        name: "user_id",
+        type: "string",
+        description: "The Discord user's unique ID.",
+      },
+      {
+        name: "username",
+        type: "string",
+        description: "The user's Discord username.",
+      },
+      {
+        name: "verified_at",
+        type: "integer",
+        description: "The Unix timestamp of when they were verified.",
+      },
     ],
   },
   {
@@ -110,17 +122,29 @@ export const apiEndpoints: ApiEndpoint[] = [
       { code: 401, description: "Unauthorized", success: false },
     ],
     responseFieldDescriptions: [
-      { name: "user_id", type: "string", description: "The Discord user's unique ID." },
-      { name: "username", type: "string", description: "The user's Discord username." },
-      { name: "verified_at", type: "integer", description: "The Unix timestamp of when they were verified." }
+      {
+        name: "user_id",
+        type: "string",
+        description: "The Discord user's unique ID.",
+      },
+      {
+        name: "username",
+        type: "string",
+        description: "The user's Discord username.",
+      },
+      {
+        name: "verified_at",
+        type: "integer",
+        description: "The Unix timestamp of when they were verified.",
+      },
     ],
   },
-{
+  {
     id: "get-user-by-id-banner",
     method: "GET",
     path: "/v1/user/:user_id/banner",
     group: "user",
-    description: "Redirects to the Discord CDN URL for the user's banner image.",
+    description: "Returns the Discord CDN URL for the user's banner image.",
     requiresAuth: false,
     pathParameters: [
       {
@@ -130,13 +154,38 @@ export const apiEndpoints: ApiEndpoint[] = [
         description: "The Discord ID of the user to retrieve the banner from.",
       },
     ],
-    responseBody: "",
+    responseBody: `{
+  "banner_url": "https://cdn.discordapp.com/banners/123456789012345678/bannerhash.png?size=512"
+}`,
     responseCodes: [
-      { code: 302, description: "Redirects to the Discord CDN banner URL in the Location header.", success: true },
-      { code: 404, description: "Not Found", success: false },
+      {
+        code: 200,
+        description: "Success. Returns the banner URL in the response body.",
+        success: true,
+      },
+      { code: 400, description: "No user_id provided", success: false },
+      {
+        code: 404,
+        description: "User does not have a banner set.",
+        success: false,
+      },
+      {
+        code: 500,
+        description: "Failed to fetch user data from Discord.",
+        success: false,
+      },
     ],
     responseFieldDescriptions: [
-      { name: "Location", type: "string", description: "The Discord CDN URL for the user's banner image." }
+      {
+        name: "banner_url",
+        type: "string",
+        description: "The Discord CDN URL for the user's banner image.",
+      },
+      {
+        name: "error",
+        type: "string",
+        description: "Error message (if applicable).",
+      },
     ],
   },
   {
@@ -147,9 +196,27 @@ export const apiEndpoints: ApiEndpoint[] = [
     description: "Creates a new GIF action.",
     requestHeaders: [...commonActionsHeaders, jsonContentTypeHeader],
     requestBodySchema: [
-      { name: "url", type: "string", required: true, description: "The direct link to the gif.", example: "https://example.com/gif.gif" },
-      { name: "anime_name", type: "string", required: true, description: "The anime from which the gif originates.", example: "Example Anime" },
-      { name: "tag", type: "string", required: true, description: "The category/tag associated with the gif.", example: "hug" }
+      {
+        name: "url",
+        type: "string",
+        required: true,
+        description: "The direct link to the gif.",
+        example: "https://example.com/gif.gif",
+      },
+      {
+        name: "anime_name",
+        type: "string",
+        required: true,
+        description: "The anime from which the gif originates.",
+        example: "Example Anime",
+      },
+      {
+        name: "tag",
+        type: "string",
+        required: true,
+        description: "The category/tag associated with the gif.",
+        example: "hug",
+      },
     ],
     requestBody: `{
   "url": "https://example.com/gif.gif",
@@ -157,10 +224,10 @@ export const apiEndpoints: ApiEndpoint[] = [
   "tag": "hug"
 }`,
     responseCodes: [
-      { code: 201, description: 'Gif added successfully', success: true }, // Changed code to 201 Created
-      { code: 400, description: 'Missing required fields', success: false },
-      { code: 401, description: 'Unauthorized', success: false },
-  ],
+      { code: 201, description: "Gif added successfully", success: true }, // Changed code to 201 Created
+      { code: 400, description: "Missing required fields", success: false },
+      { code: 401, description: "Unauthorized", success: false },
+    ],
   },
   {
     id: "get-action-tags",
@@ -202,10 +269,26 @@ export const apiEndpoints: ApiEndpoint[] = [
   "tag": "hug"
 }`,
     responseFieldDescriptions: [
-      { name: "id", type: "integer",  description: "The unique identifier for the gif." },
-      { name: "url", type: "string",  description: "The direct link to the gif." },
-      { name: "anime_name", type: "string", description: "The anime where the gif comes from." },
-      { name: "tag", type: "string",  description: "The tag/category associated with the gif." }
+      {
+        name: "id",
+        type: "integer",
+        description: "The unique identifier for the gif.",
+      },
+      {
+        name: "url",
+        type: "string",
+        description: "The direct link to the gif.",
+      },
+      {
+        name: "anime_name",
+        type: "string",
+        description: "The anime where the gif comes from.",
+      },
+      {
+        name: "tag",
+        type: "string",
+        description: "The tag/category associated with the gif.",
+      },
     ],
     responseCodes: [
       { code: 200, description: "Success", success: true },
